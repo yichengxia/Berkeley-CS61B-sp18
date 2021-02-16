@@ -18,7 +18,7 @@ public class NBody {
             double xxVel = in.readDouble();
             double yyVel = in.readDouble();
             double mass = in.readDouble();
-            String imgFileName = "images/" + in.readString();
+            String imgFileName = in.readString();
             p[i] = new Planet(xxPos, yyPos, xxVel, yyVel, mass, imgFileName);
         }
         return p;
@@ -70,6 +70,15 @@ public class NBody {
             StdDraw.show();
             /** Pause the animation for 10 milliseconds. */
 		    StdDraw.pause(10);
+        }
+
+        /** Printing the Universe */
+        StdOut.printf("%d\n", planets.length);
+        StdOut.printf("%.2e\n", radius);
+        for (int i = 0; i < planets.length; i++) {
+            StdOut.printf("%11.4e %11.4e %11.4e %11.4e %11.4e %12s\n",
+            planets[i].xxPos, planets[i].yyPos, planets[i].xxVel,
+            planets[i].yyVel, planets[i].mass, planets[i].imgFileName);   
         }
 
     }
