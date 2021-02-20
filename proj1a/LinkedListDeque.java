@@ -1,10 +1,10 @@
 public class LinkedListDeque<T> {
 
     private class Node {
-        public T value;
-        public Node prev;
-        public Node next;
-        public Node(T item) {
+        T value;
+        Node prev;
+        Node next;
+        Node(T item) {
             this.value = item;
             this.prev = null;
             this.next = null;
@@ -44,11 +44,7 @@ public class LinkedListDeque<T> {
 
     /** Returns true if deque is empty, false otherwise. */
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return (size == 0);
     }
 
     /** Returns the number of items in the deque. */

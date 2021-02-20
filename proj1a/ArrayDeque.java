@@ -43,11 +43,7 @@ public class ArrayDeque<T> {
 
     /** Returns true if deque is empty, false otherwise. */
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return (size == 0);
     }
 
     /** Returns the number of items in the deque. */
@@ -131,7 +127,7 @@ public class ArrayDeque<T> {
         }
     }
 
-    public void ifExpand(){
+    public void ifExpand() {
         if (size == capacity - 2) {
             capacity += 1;
             T[] a = (T[]) new Object[capacity];
