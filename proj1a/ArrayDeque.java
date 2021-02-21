@@ -7,6 +7,8 @@ public class ArrayDeque<T> {
     private int capacity;
 
     private int initialCapacity = 8;
+    private static int eScale = 2; // Expanding scale
+    private static int cScale = 2; // Contracting scale
 
     /** Creates an empty array deque. */
     public ArrayDeque() {
@@ -19,26 +21,18 @@ public class ArrayDeque<T> {
 
     /** Adds an item of type T to the front of the deque. */
     public void addFirst(T item) {
-        ifExpand();
         items[nextFirst] = item;
-        if (nextFirst == 0) {
-            nextFirst = nextFirst - 1 + capacity;
-        } else {
-            nextFirst -= 1;
-        }
+        nextFirst = minusOne(nextFirst);
         size += 1;
+        expand();
     }
 
     /** Adds an item of type T to the back of the deque */
     public void addLast(T item) {
-        ifExpand();
         items[nextLast] = item;
-        if (nextLast == capacity - 1) {
-            nextLast = 0;
-        } else {
-            nextLast += 1;
-        }
+        nextLast = plusOne(nextLast);
         size += 1;
+        expand();
     }
 
     /** Returns true if deque is empty, false otherwise. */
@@ -63,84 +57,78 @@ public class ArrayDeque<T> {
     /** Removes and returns the item at the front of the deque.
      * If no such item exists, returns null. */
     public T removeFirst() {
-        if ((nextLast - nextFirst == 1) || (nextFirst - nextLast == capacity - 1)) {
+        if (isEmpty()) {
             return null;
         }
+        int p = plusOne(nextFirst);
+        T i = items[p];
+        items[p] = null;
+        nextFirst = p;
         size -= 1;
-        if (nextFirst == capacity - 1) {
-            nextFirst = 0;
-            ifContract();
-            return items[0];
-        } else {
-            nextFirst += 1;
-            T i = items[nextFirst];
-            items[nextFirst] = null;
-            ifContract();
-            return i;
-        }
+        contract();
+        return i;
     }
 
     /** Removes and returns the item at the back of the deque.
      * If no such item exists, returns null. */
     public T removeLast() {
-        if ((nextLast - nextFirst == 1) || (nextFirst - nextLast == capacity - 1)) {
+        if (isEmpty()) {
             return null;
         }
+        int p = minusOne(nextLast);
+        T i = items[p];
+        items[p] = null;
+        nextLast = p;
         size -= 1;
-        T i;
-        if (nextLast == 0) {
-            nextLast = capacity - 1;
-            i = items[nextLast];
-            items[nextLast] = null;
-            ifContract();
-            return i;
-        } else {
-            nextLast -= 1;
-            i = items[nextLast];
-            items[nextLast] = null;
-            ifContract();
-            return i;
-        }
+        contract();
+        return i;
     }
 
     /** Gets the item at the given index, where 0 is the front, 1 is the next item, and so forth.
      * If no such item exists, returns null. Must not alter the deque! */
     public T get(int index) {
-        int p = nextFirst + index + 1;
-        if (p > capacity - 1) {
-            p -= capacity;
-        }
-        if (nextLast > nextFirst) {
-            if (p > nextFirst && p < nextLast) {
-                return items[p];
-            } else {
-                return null;
-            }
-        } else if (p >= nextLast && p <= nextFirst) {
+        if (index >= size) {
             return null;
         } else {
+            int p = index + nextFirst + 1;
+            if (p > size) {
+                p -= capacity;
+            }
             return items[p];
         }
     }
 
-    private void ifExpand() {
-        if (size == capacity - 2) {
-            capacity += 1;
-            T[] a = (T[]) new Object[capacity];
-            System.arraycopy(items, 0, a, 0, capacity);
-            items = a;
+    private void resize(int newCapacity) {
+        T[] newItems = (T[]) new Object[newCapacity];
+        int iFirst = plusOne(nextFirst); // items start
+        int iLast = minusOne(nextLast); // items end
+        if (iFirst < iLast) {
+            System.arraycopy(items, iFirst, newItems, 0, size);
+            nextFirst = newCapacity - 1;
+            nextLast = size;
+        } else {
+            int sizeFirst = capacity - iFirst;
+            int newIFirst = newCapacity - sizeFirst;
+            int sizeLast = nextLast;
+            System.arraycopy(items, iFirst, newItems, newIFirst, sizeFirst);
+            System.arraycopy(items, 0, newItems, 0, sizeLast);
+            nextLast -= newCapacity - capacity; 
+        }
+        capacity = newCapacity;
+        items = newItems;
+    }
+
+    private void expand() {
+        if (size == capacity) {
+            int newCapacity = capacity * eScale;
+            resize(newCapacity);
         }
     }
 
-    private void ifContract() {
-        int i = capacity;
-        while (capacity >= 16 && size / capacity < 0.25) {
-            capacity -= 1;
-        }
-        if (i != capacity) {
-            T[] a = (T[]) new Object[capacity];
-            System.arraycopy(items, 0, a, 0, capacity);
-            items = a;
+    private void contract() {
+        if (capacity >= 16 && (double) size / capacity < 0.25) {
+            int newCapacity = capacity / cScale;
+            resize(newCapacity);
         }
     }
 
@@ -153,7 +141,6 @@ public class ArrayDeque<T> {
     }
 
     private int plusOne(int index) {
-
         if (index == capacity - 1) {
             return 0;
         } else {
