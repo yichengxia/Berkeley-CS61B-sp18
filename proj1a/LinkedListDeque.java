@@ -109,15 +109,21 @@ public class LinkedListDeque<T> {
 
     /** Same as get, but uses recursion. */
     public T getRecursive(int index) {
-        Node p = sentinel.next;
         if (index > (size - 1)) {
             return null;
-        } else if (index == 0) {
+        } else {
+            Node p = sentinel.next;
+            return recursive(p, index);
+        } 
+    }
+
+    private T recursive(Node p, int index) {
+        if (index == 0) {
             return p.value;
         } else {
             p = p.next;
             index -= 1;
-            return getRecursive(index);
+            return recursive(p, index);
         }
     }
 

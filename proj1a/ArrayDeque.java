@@ -55,11 +55,7 @@ public class ArrayDeque<T> {
      * Once all the items have been printed, print out a new line. */
     public void printDeque() {
         for (int i = 0; i < size; i += 1) {
-            if (i + nextFirst < capacity) {
-                System.out.print(items[i + nextFirst + 1].toString() + " ");
-            } else {
-                System.out.print(items[i + nextFirst - capacity].toString() + " ");
-            }
+            System.out.print(items[plusOne(nextFirst)].toString() + " ");
         }
         System.out.println();
     }
@@ -127,7 +123,7 @@ public class ArrayDeque<T> {
         }
     }
 
-    public void ifExpand() {
+    private void ifExpand() {
         if (size == capacity - 2) {
             capacity += 1;
             T[] a = (T[]) new Object[capacity];
@@ -136,7 +132,7 @@ public class ArrayDeque<T> {
         }
     }
 
-    public void ifContract() {
+    private void ifContract() {
         int i = capacity;
         while (capacity >= 16 && size / capacity < 0.25) {
             capacity -= 1;
@@ -145,6 +141,23 @@ public class ArrayDeque<T> {
             T[] a = (T[]) new Object[capacity];
             System.arraycopy(items, 0, a, 0, capacity);
             items = a;
+        }
+    }
+
+    private int minusOne(int index) {
+        if (index == 0) {
+            return capacity - 1;
+        } else {
+            return index - 1;
+        }
+    }
+
+    private int plusOne(int index) {
+
+        if (index == capacity - 1) {
+            return 0;
+        } else {
+            return index + 1;
         }
     }
 
