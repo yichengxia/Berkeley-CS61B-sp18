@@ -91,7 +91,7 @@ public class ArrayDeque<T> {
             return null;
         } else {
             int p = index + nextFirst + 1;
-            if (p > size) {
+            if (p >= capacity) {
                 p -= capacity;
             }
             return items[p];
