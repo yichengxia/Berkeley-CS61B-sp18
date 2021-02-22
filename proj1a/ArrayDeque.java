@@ -108,11 +108,11 @@ public class ArrayDeque<T> {
             nextLast = size;
         } else {
             int sizeFirst = capacity - iFirst;
-            int newIFirst = newCapacity - sizeFirst;
             int sizeLast = nextLast;
-            System.arraycopy(items, iFirst, newItems, newIFirst, sizeFirst);
-            System.arraycopy(items, 0, newItems, 0, sizeLast);
-            nextLast -= newCapacity - capacity; 
+            System.arraycopy(items, iFirst, newItems, 0, sizeFirst);
+            System.arraycopy(items, 0, newItems, sizeFirst, sizeLast);
+            nextFirst = newCapacity - 1;
+            nextLast = size;
         }
         capacity = newCapacity;
         items = newItems;
