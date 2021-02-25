@@ -24,6 +24,16 @@ public class TestPalindrome {
         assertTrue(palindrome.isPalindrome(""));
         assertFalse(palindrome.isPalindrome("to"));
         assertFalse(palindrome.isPalindrome("cat"));
+        assertFalse(palindrome.isPalindrome("Pop"));
+
+        CharacterComparator offByOne = new OffByOne();
+        assertTrue(palindrome.isPalindrome("", offByOne));
+        assertTrue(palindrome.isPalindrome("a", offByOne));
+        assertTrue(palindrome.isPalindrome("flake", offByOne));
+        assertTrue(palindrome.isPalindrome("mon", offByOne));
+        assertFalse(palindrome.isPalindrome("frake", offByOne));
+        assertFalse(palindrome.isPalindrome("deed", offByOne));
+        assertFalse(palindrome.isPalindrome("Moon", offByOne));
     }
 
 }
