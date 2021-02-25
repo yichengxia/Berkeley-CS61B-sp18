@@ -15,7 +15,7 @@ public class Palindrome {
         if (word.length() == 1) {
             return true;
         }
-        for (int i = 0, j = word.length()-1; i < j; i += 1, j -= 1) {
+        for (int i = 0, j = word.length() - 1; i < j; i += 1, j -= 1) {
             if (word.charAt(i) != word.charAt(j)) {
                 return false;
             }
@@ -30,7 +30,7 @@ public class Palindrome {
         if (word.length() == 1) {
             return true;
         }
-        for (int i = 0, j = word.length()-1; i < j; i += 1, j -= 1) {
+        for (int i = 0, j = word.length() - 1; i < j; i += 1, j -= 1) {
             if (!cc.equalChars(word.charAt(i), word.charAt(j))) {
                 return false;
             }
