@@ -10,11 +10,11 @@ public class TestArrayDequeGold {
         if (random < 0.5) {
             sad.addLast(i);
             ads.addLast(i);
-            message += "\naddLast(" + i;
+            message += "\naddLast(" + i + ")";
         } else {
             sad.addFirst(i);
             ads.addFirst(i);
-            message += "\naddFirst(" + i;
+            message += "\naddFirst(" + i + ")";
         }
     }
 
