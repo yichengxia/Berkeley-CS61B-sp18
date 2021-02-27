@@ -38,9 +38,9 @@ public class TestArrayDequeGold {
         StudentArrayDeque<Integer> sad = new StudentArrayDeque<>();
         ArrayDequeSolution<Integer> ads = new ArrayDequeSolution<>();
         for (int i = 0; i < call; i += 1) {
-            double randomWhetherAdd = StdRandom.uniform();
             if (sad.isEmpty()) {
-                randomAdd(randomWhetherAdd, i, sad, ads);
+                randomAdd(0.25, i, sad, ads);
+                randomAdd(0.75, i, sad, ads);
             } else {
                 double randomAddOrRemove = StdRandom.uniform();
                 double randomWhere = StdRandom.uniform();
