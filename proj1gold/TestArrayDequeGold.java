@@ -10,11 +10,11 @@ public class TestArrayDequeGold {
         if (random < 0.5) {
             sad.addLast(i);
             ads.addLast(i);
-            message += "\naddLast(" + i + ")\nremoveLast()";
+            message += "\naddLast(" + i;
         } else {
             sad.addFirst(i);
             ads.addFirst(i);
-            message += "\naddFirst(" + i + ")\nremoveFirst()";
+            message += "\naddFirst(" + i;
         }
     }
 
@@ -38,9 +38,9 @@ public class TestArrayDequeGold {
         StudentArrayDeque<Integer> sad = new StudentArrayDeque<>();
         ArrayDequeSolution<Integer> ads = new ArrayDequeSolution<>();
         for (int i = 0; i < call; i += 1) {
+            double randomWhetherAdd = StdRandom.uniform();
             if (sad.isEmpty()) {
-                randomAdd(0.25, i, sad, ads);
-                randomAdd(0.75, i, sad, ads);
+                randomAdd(randomWhetherAdd, i, sad, ads);
             } else {
                 double randomAddOrRemove = StdRandom.uniform();
                 double randomWhere = StdRandom.uniform();
