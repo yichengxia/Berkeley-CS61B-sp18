@@ -1,8 +1,6 @@
 package synthesizer;
 import java.util.Iterator;
 
-import synthesizer.AbstractBoundedQueue;
-
 public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
     /* Index for the next dequeue or peek. */
     private int first;            // index for the next dequeue or peek
@@ -69,6 +67,9 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      */
     @Override
     public T peek() {
+        if (isEmpty()) {
+            throw new RuntimeException("Ring Buffer Underflow");
+        }
         // Return the first item. None of your instance variables should change.
         return rb[first];
     }

@@ -1,6 +1,6 @@
 /** A client that uses the synthesizer package to replicate a plucked guitar string sound */
 public class GuitarHero {
-    private static final String keyboard = "q2we4r5ty7u8i9op-[=zxdcfvgbnjmk,.;/' ";
+    private static String keyboard = "q2we4r5ty7u8i9op-[=zxdcfvgbnjmk,.;/' ";
     private static double[] CONCERT = new double[37];
     private static synthesizer.GuitarString[] string = new synthesizer.GuitarString[37];
     private static int index;
