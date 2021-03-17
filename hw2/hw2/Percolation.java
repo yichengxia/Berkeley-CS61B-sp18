@@ -73,7 +73,7 @@ public class Percolation {
                 gridB.union(getIndex(row, col), getIndex(row, col + 1));
             }
             if (gridB.connected(sentinelT, sentinelB)) {
-                    percolated = true;
+                percolated = true;
             }
         }
     }
