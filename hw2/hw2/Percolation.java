@@ -58,10 +58,10 @@ public class Percolation {
             if (inRange(row, col + 1) && isOpen(row, col + 1)) {
                 grid.union(getIndex(row, col), getIndex(row, col + 1));
             }
-        }
-        for (int c = 0; c < N; c += 1) {
-            if(grid.connected(getIndex(N - 1, c), sentinel)) {
-                percolated = true;
+            for (int c = 0; c < N; c += 1) {
+                if (grid.connected(getIndex(N - 1, c), sentinel)) {
+                    percolated = true;
+                }
             }
         }
     }

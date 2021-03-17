@@ -30,7 +30,7 @@ public class PercolationStats {
                 int col = StdRandom.uniform(0, N);
                 pfExp.open(row, col);
             }
-            threshold[t] = pfExp.numberOfOpenSites() / (N * N);
+            threshold[t] = (double) pfExp.numberOfOpenSites() / (N * N);
         }
     }
 
