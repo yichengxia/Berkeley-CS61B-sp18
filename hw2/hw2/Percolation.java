@@ -25,9 +25,6 @@ public class Percolation {
         grid = new WeightedQuickUnionUF(N * N + 1);
         sentinel = N * N;
         percolated = false;
-        for (int col = 0; col < N; col += 1) {
-            grid.union(getIndex(0, col), sentinel);
-        }
     }
 
     private boolean inRange(int row, int col) {
@@ -43,8 +40,11 @@ public class Percolation {
         if (!inRange(row, col)) {
             throw new IndexOutOfBoundsException("Invalid arg: row " + row + ", col " + col + ".");
         }
-        if (openIndex[getIndex(row, col)] == false) {
+        if (!openIndex[getIndex(row, col)]) {
             openIndex[getIndex(row, col)] = true;
+            if (row == 0) {
+                grid.union(getIndex(0, col), sentinel);
+            }
             openNum += 1;
             if (inRange(row - 1, col) && isOpen(row - 1, col)) {
                 grid.union(getIndex(row, col), getIndex(row - 1, col));
