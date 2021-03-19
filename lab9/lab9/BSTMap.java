@@ -1,5 +1,6 @@
 package lab9;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -100,10 +101,77 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
     //////////////// EVERYTHING BELOW THIS LINE IS OPTIONAL ////////////////
 
+    private void keySetHelper(Set<K> keySet, Node p) {
+        if (p == null) {
+            return;
+        }
+        keySet.add(p.key);
+        keySetHelper(keySet, p.left);
+        keySetHelper(keySet, p.right);
+    }
+
     /* Returns a Set view of the keys contained in this map. */
     @Override
     public Set<K> keySet() {
-        throw new UnsupportedOperationException();
+        Set<K> keySet = new HashSet<>();
+        keySetHelper(keySet, root);
+        return keySet;
+    }
+
+    private Node deleteMin(Node p) {
+        if (p.left == null) {
+            return p.right;
+        } else {
+            p.left = deleteMin(p.left);
+        }
+        return p;
+    }
+
+    private Node min(Node p) {
+        if (p.left == null) {
+            return p;
+        } else {
+            return min(p.left);
+        }
+    }
+
+    private int childIndex(Node p) {
+        if (p.left == null && p.right == null) {
+            return 0;
+        } else if (p.right == null) {
+            return -1;
+        } else if (p.left == null) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
+
+    private Node removeHelper(K key, Node p) {
+        if (key.compareTo(p.key) < 0) {
+            removeHelper(key, p.left);
+        } else if (key.compareTo(p.key) > 0) {
+            removeHelper(key, p.right);
+        } else {
+            switch (childIndex(p)) {
+                case 0:
+                    return null;
+                case -1:
+                    return p.left;
+                case 1:
+                    return p.right;
+                case 2:
+                    /** @Source
+                     *  Algorithms (Fourth Edition) 410-411
+                     * "an answer first proposed by T.Hibbard, 1962" */
+                    Node t = p;
+                    p = min(t.right);
+                    p.right = deleteMin(t.right);
+                    p.left = t.left;
+                    return p;
+            }
+        }
+        return p;
     }
 
     /** Removes KEY from the tree if present
@@ -112,7 +180,13 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      */
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        V removed = get(key);
+        if (removed == null) {
+            return null;
+        }
+        root = removeHelper(key, root);
+        size -= 1;
+        return removed;
     }
 
     /** Removes the key-value entry for the specified key only if it is
@@ -121,11 +195,17 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      **/
     @Override
     public V remove(K key, V value) {
-        throw new UnsupportedOperationException();
+        V removed = get(key);
+        if (removed == null || !removed.equals(value)) {
+            return null;
+        }
+        root = removeHelper(key, root);
+        size -= 1;
+        return removed;
     }
 
     @Override
     public Iterator<K> iterator() {
-        throw new UnsupportedOperationException();
+        return keySet().iterator();
     }
 }
