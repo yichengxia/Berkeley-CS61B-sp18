@@ -37,7 +37,7 @@ public class SimpleOomage implements Oomage {
             int hash = 17;
             hash = 64 * hash + red / 5;
             hash = 64 * hash + green / 5;
-            hash = 64 * hash + blue /5;
+            hash = 64 * hash + blue / 5;
             return hash;
         }
     }
