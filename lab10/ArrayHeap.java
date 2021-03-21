@@ -106,11 +106,13 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
 
-        while (index > 0 && contents[index].myPriority < contents[index / 2].myPriority) {
-            swap(index, index / 2);
-            index /= 2;
+        if (parentIndex(index) == 0) {
+            return;
         }
-        return;
+        if (min(index, parentIndex(index)) == index) {
+            swap(index, parentIndex(index));
+            swim(parentIndex(index));
+        }
     }
 
     /**
@@ -208,69 +210,16 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public void changePriority(T item, double priority) {
-        int changed = 0;
         for (int i = 1; i <= size; i += 1) {
             if (contents[i].myItem.equals(item)) {
-                changed = i;
-                contents[changed].myPriority = priority;
-                break;
-            }
-        }
-        boolean parentIndex = contents[changed].myPriority > contents[parentIndex(changed)].myPriority;
-        boolean leftIndex = contents[changed].myPriority < contents[leftIndex(changed)].myPriority;
-        boolean rightIndex = contents[changed].myPriority < contents[rightIndex(changed)].myPriority;
-        while (!parentIndex || !leftIndex || !rightIndex) {
-            if (2 * changed < size) {
-                if (!parentIndex) {
-                    swap(changed, parentIndex(changed));
-                    changed = parentIndex(changed);
-                    parentIndex = contents[changed].myPriority > contents[parentIndex(changed)].myPriority;
-                    leftIndex = contents[changed].myPriority < contents[leftIndex(changed)].myPriority;
-                    rightIndex = contents[changed].myPriority < contents[rightIndex(changed)].myPriority;
-                } else {
-                    break;
-                }
-            }
-            if (2 * changed == size) {
-                if (!leftIndex) {
-                    swap(changed, leftIndex(changed));
-                    changed = leftIndex(changed);
-                    parentIndex = contents[changed].myPriority > contents[parentIndex(changed)].myPriority;
-                    leftIndex = contents[changed].myPriority < contents[leftIndex(changed)].myPriority;
-                    rightIndex = contents[changed].myPriority < contents[rightIndex(changed)].myPriority;
-                } else {
-                    break;
-                }
-            }
-            if (2 * changed + 1 == size) {
-                if (!leftIndex && !rightIndex) {
-                    if (contents[leftIndex(changed)].myPriority < contents[rightIndex(changed)].myPriority) {
-                        swap(changed, leftIndex(changed));
-                        changed = leftIndex(changed);
-                        parentIndex = contents[changed].myPriority > contents[parentIndex(changed)].myPriority;
-                        leftIndex = contents[changed].myPriority < contents[leftIndex(changed)].myPriority;
-                        rightIndex = contents[changed].myPriority < contents[rightIndex(changed)].myPriority;
-                    } else {
-                        swap(changed, rightIndex(changed));
-                        changed = rightIndex(changed);
-                        parentIndex = contents[changed].myPriority > contents[parentIndex(changed)].myPriority;
-                        leftIndex = contents[changed].myPriority < contents[leftIndex(changed)].myPriority;
-                        rightIndex = contents[changed].myPriority < contents[rightIndex(changed)].myPriority;
-                    }
-                }
-                if (!leftIndex) {
-                    swap(changed, leftIndex(changed));
-                    changed = leftIndex(changed);
-                    parentIndex = contents[changed].myPriority > contents[parentIndex(changed)].myPriority;
-                    leftIndex = contents[changed].myPriority < contents[leftIndex(changed)].myPriority;
-                    rightIndex = contents[changed].myPriority < contents[rightIndex(changed)].myPriority;
-                }
-                if (!rightIndex) {
-                    swap(changed, rightIndex(changed));
-                    changed = rightIndex(changed);
-                    parentIndex = contents[changed].myPriority > contents[parentIndex(changed)].myPriority;
-                    leftIndex = contents[changed].myPriority < contents[leftIndex(changed)].myPriority;
-                    rightIndex = contents[changed].myPriority < contents[rightIndex(changed)].myPriority;
+                double oldPriority = contents[i].myPriority;
+                contents[i] = new Node(item, priority);
+
+                // adjust the new node
+                if (oldPriority > priority) {
+                    swim(i);
+                } else if (oldPriority < priority) {
+                    sink(i);
                 }
             }
         }
