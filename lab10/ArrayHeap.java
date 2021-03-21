@@ -145,9 +145,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
             resize(contents.length * 2);
         }
 
+        Node node = new Node(item, priority);
         size += 1;
-        contents[size].myItem = item;
-        contents[size].myPriority = priority;
+        contents[size] = node;
         swim(size);
     }
 
