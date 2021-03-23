@@ -146,7 +146,7 @@ public class Board implements WorldState {
       * Uncomment this method. */
     public String toString() {
         StringBuilder s = new StringBuilder();
-        int n = size();
+        int n = size(); // prevent using 'N' that hides a field [HiddenField]
         s.append(n + "\n");
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
