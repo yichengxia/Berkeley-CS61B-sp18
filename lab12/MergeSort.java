@@ -34,8 +34,13 @@ public class MergeSort {
     /** Returns a queue of queues that each contain one item from items. */
     private static <Item extends Comparable> Queue<Queue<Item>>
             makeSingleItemQueues(Queue<Item> items) {
-        // Your code here!
-        return null;
+        Queue<Queue<Item>> queues = new Queue<>();
+        for (Item item : items) {
+            Queue<Item> queue = new Queue<>();
+            queue.enqueue(item);
+            queues.enqueue(queue);
+        }
+        return queues;
     }
 
     /**
@@ -53,14 +58,44 @@ public class MergeSort {
      */
     private static <Item extends Comparable> Queue<Item> mergeSortedQueues(
             Queue<Item> q1, Queue<Item> q2) {
-        // Your code here!
-        return null;
+        Queue<Item> queue = new Queue<>();
+        while (!q1.isEmpty() || !q2.isEmpty()) {
+            queue.enqueue(getMin(q1, q2));
+        }
+        return queue;
     }
 
     /** Returns a Queue that contains the given items sorted from least to greatest. */
     public static <Item extends Comparable> Queue<Item> mergeSort(
             Queue<Item> items) {
-        // Your code here!
-        return items;
+        if (items.size() <= 1) {
+            return items;
+        }
+        Queue<Item> ql = new Queue<>();
+        Queue<Item> qr = new Queue<>();
+        Queue<Queue<Item>> queues = makeSingleItemQueues(items);
+        for (int i = 0; i < items.size() / 2; i += 1) {
+            ql.enqueue(queues.dequeue().dequeue());
+        }
+        for (int i = items.size() / 2; i < items.size(); i += 1) {
+            qr.enqueue(queues.dequeue().dequeue());
+        }
+        Queue<Item> q1 = mergeSort(ql);
+        Queue<Item> q2 = mergeSort(qr);
+        return mergeSortedQueues(q1, q2);
+    }
+
+    public static void main(String[] args) {
+        Queue<String> friends = new Queue<String>();
+        friends.enqueue("Christopher-Robin");
+        friends.enqueue("Winnie-the-Pooh");
+        friends.enqueue("Tigger");
+        friends.enqueue("Eeyore");
+        friends.enqueue("Roo");
+        friends.enqueue("Owl");
+        friends.enqueue("Rabbit");
+        System.out.println("original queue: " + friends.toString());
+        Queue<String> sortedFriends = mergeSort(friends);
+        System.out.println("sorted queue: " + sortedFriends.toString());
     }
 }
