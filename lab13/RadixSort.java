@@ -35,10 +35,9 @@ public class RadixSort {
                     count[0]++;
                 }
             }
+            start[1] = count[0];
             for (int r = 1; r < R; r++) {
-                for (int s = r - 1; s >= 0; s--) {
-                    start[r] += count[s];
-                }
+                start[r] = count[r - 1] + start[r - 1];
             }
             for (int i = 0; i < N; i++) {
                 if (d < asciis[i].length()) {
