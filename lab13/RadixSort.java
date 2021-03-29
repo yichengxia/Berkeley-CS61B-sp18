@@ -25,8 +25,14 @@ public class RadixSort {
         for (int i = 0; i < N; i += 1) {
             max = max > asciis[i].length() ? max : asciis[i].length();
         }
+        // FAILED TESTS b001) Radix Sort Times: Try to match (or beat) staff solution runtime. (0.0/2.0)
+        // org.junit.runners.model.TestTimedOutException: test timed out after 10000 milliseconds
+        // at RadixSort.sort:28 (RadixSort.java)
+        // at AGTestRadixSort.testRadixSortTime:33 (AGTestRadixSort.java)
+        // TO BE SOLVED
         for (int d = max - 1; d >= 0; d--) {
-            int[] count = new int[R + 1];
+            int[] count = new int[R];
+            int[] start = new int[R];
             for (int i = 0; i < N; i++) {
                 if (d < asciis[i].length()) {
                     count[(int) asciis[i].charAt(d)]++;
@@ -34,14 +40,15 @@ public class RadixSort {
                     count[0]++;
                 }
             }
+            start[1] = count[0];
             for (int r = 1; r < R; r++) {
-                count[r] += count[r - 1];
+                start[r] = count[r - 1] + start[r - 1];
             }
             for (int i = 0; i < N; i++) {
                 if (d < asciis[i].length()) {
-                    aux[count[(int) asciis[i].charAt(d) - 1]++] = asciis[i];
+                    aux[start[(int) asciis[i].charAt(d)]++] = asciis[i];
                 } else {
-                    aux[count[R]++] = asciis[i];
+                    aux[start[0]++] = asciis[i];
                 }
             }
             for (int i = 0; i < N; i++) {
