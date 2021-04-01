@@ -9,12 +9,12 @@ public class SeamRemover {
     public SeamRemover() {
     }
 
-    public static Picture removeHorizontalSeam(Picture var0, int[] var1) {
+    public static Picture removeHorizontalSeam(Picture picture, int[] var1) {
         if(var1 == null) {
             throw new NullPointerException("Input seam array cannot be null.");
-        } else if(var0.width() == 1) {
+        } else if(picture.width() == 1) {
             throw new IllegalArgumentException("Image width is 1.");
-        } else if(var1.length != var0.width()) {
+        } else if(var1.length != picture.width()) {
             throw new IllegalArgumentException("Seam length does not match image width.");
         } else {
             for(int var2 = 0; var2 < var1.length - 2; ++var2) {
@@ -23,16 +23,16 @@ public class SeamRemover {
                 }
             }
 
-            Picture var5 = new Picture(var0.width(), var0.height() - 1);
+            Picture var5 = new Picture(picture.width(), picture.height() - 1);
 
-            for(int var3 = 0; var3 < var0.width(); ++var3) {
+            for(int var3 = 0; var3 < picture.width(); ++var3) {
                 int var4;
                 for(var4 = 0; var4 < var1[var3]; ++var4) {
-                    var5.set(var3, var4, var0.get(var3, var4));
+                    var5.set(var3, var4, picture.get(var3, var4));
                 }
 
-                for(var4 = var1[var3] + 1; var4 < var0.height(); ++var4) {
-                    var5.set(var3, var4 - 1, var0.get(var3, var4));
+                for(var4 = var1[var3] + 1; var4 < picture.height(); ++var4) {
+                    var5.set(var3, var4 - 1, picture.get(var3, var4));
                 }
             }
 
