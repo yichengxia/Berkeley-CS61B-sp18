@@ -12,7 +12,7 @@ public class SeamCarver {
     private int[] vs;
 
     public SeamCarver(Picture picture) {
-        this.picture = picture;
+        this.picture = new Picture(picture);
         this.w = picture.width();
         this.h = picture.height();
         this.m = new double[w][h];
@@ -131,14 +131,22 @@ public class SeamCarver {
         return;
     }
 
+    private Picture transpose(Picture picture) {
+        Picture p = new Picture(h, w);
+        for (int i = 0; i < w; i += 1) {
+            for (int j = 0; j < h; j += 1) {
+                Color color = picture.get(i, j);
+                p.set(j, i, color);
+            }
+        }
+        return p;
+    }
+
     // sequence of indices for horizontal seam
     public int[] findHorizontalSeam() {
-        int[] hs = new int[w];
-        int tmp = w;
-        w = h;
-        h = tmp;
-        hs = findVerticalSeam();
-        return hs;
+        picture = transpose(picture);
+        SeamCarver sc = new SeamCarver(picture);
+        return sc.findVerticalSeam();
     }
 
     // sequence of indices for vertical seam
