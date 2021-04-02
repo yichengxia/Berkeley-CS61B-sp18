@@ -37,9 +37,9 @@ public class SeamCarver {
         }
         Color cxplus = x + 1 <= w - 1 ? picture.get(x + 1, y) : picture.get(0, y);
         Color cxminus = x - 1 >= 0 ? picture.get(x - 1, y) : picture.get(w - 1, y);
-        int rx = cxplus.getRed() * cxplus.getRed() - cxminus.getRed() * cxminus.getRed();
-        int gx = cxplus.getGreen() * cxplus.getGreen() - cxminus.getGreen() * cxminus.getGreen();
-        int bx = cxplus.getBlue() * cxplus.getBlue() - cxminus.getBlue() * cxminus.getBlue();
+        int rx = cxplus.getRed() - cxminus.getRed();
+        int gx = cxplus.getGreen() - cxminus.getGreen();
+        int bx = cxplus.getBlue() - cxminus.getBlue();
         return rx * rx + gx * gx + bx * bx;
     }
 
@@ -49,9 +49,9 @@ public class SeamCarver {
         }
         Color cyplus = y + 1 <= h - 1 ? picture.get(x, y + 1) : picture.get(x, 0);
         Color cyminus = y - 1 >= 0 ? picture.get(x, y - 1) : picture.get(x, h - 1);
-        int ry = cyplus.getRed() * cyplus.getRed() - cyminus.getRed() * cyminus.getRed();
-        int gy = cyplus.getGreen() * cyplus.getGreen() - cyminus.getGreen() * cyminus.getGreen();
-        int by = cyplus.getBlue() * cyplus.getBlue() - cyminus.getBlue() * cyminus.getBlue();
+        int ry = cyplus.getRed() - cyminus.getRed();
+        int gy = cyplus.getGreen() - cyminus.getGreen();
+        int by = cyplus.getBlue() - cyminus.getBlue();
         return ry * ry + gy * gy + by * by;
     }
 
