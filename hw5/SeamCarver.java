@@ -12,7 +12,7 @@ public class SeamCarver {
     private int[] vs;
 
     public SeamCarver(Picture picture) {
-        this.picture = picture;
+        this.picture = new Picture(picture);
         this.w = picture.width();
         this.h = picture.height();
         this.m = new double[w][h];
