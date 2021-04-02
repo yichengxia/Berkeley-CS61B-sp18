@@ -81,23 +81,39 @@ public class SeamCarver {
         }
     }
 
-    private int m(int i) {
-        if (i == 0) {
-            for (int j = 0; j < w; j += 1) {
-                m[0][j] = energy(0, j);
+    private double min(double a, double b) {
+        if (a < b) {
+            return a;
+        } else {
+            return b;
+        }
+    }
+
+    private int m(int j) {
+        if (j == 0) {
+            for (int i = 0; i < w; i += 1) {
+                m[i][0] = energy(i, 0);
             }
             int min = 0;
-            for (int j = 0; j < w; j += 1) {
-                min = m[0][min] < m[0][j] ? min : j;
+            for (int i = 0; i < w; i += 1) {
+                min = m[min][0] < m[i][0] ? min : i;
             }
             return min;
         }
-        for (int j = 0; j < w; j += 1) {
-            m[i][j] += energy(i, j) + min(m[i - 1][j - 1], m[i][j - 1], m[i + 1][j - 1]);
+        for (int i = 0; i < w; i += 1) {
+            if (i - 1 < 0 && i + 1 > w - 1) {
+                m[i][j] += energy(i, j) + m[i][j - 1];
+            } else if (i - 1 < 0) {
+                m[i][j] += energy(i, j) + min(m[i][j - 1], m[i + 1][j - 1]);
+            } else if (i + 1 > w - 1) {
+                m[i][j] += energy(i, j) + min(m[i - 1][j - 1], m[i][j - 1]);
+            } else {
+                m[i][j] += energy(i, j) + min(m[i - 1][j - 1], m[i][j - 1], m[i + 1][j - 1]);
+            }
         }
         int min = 0;
-        for (int j = 0; j < w; j += 1) {
-            min = m[i][min] < m[i][j] ? min : j;
+        for (int i = 0; i < w; i += 1) {
+            min = m[min][j] < m[i][j] ? min : i;
         }
         return min;
     }
@@ -105,8 +121,8 @@ public class SeamCarver {
     // sequence of indices for horizontal seam
     public int[] findHorizontalSeam() {
         int[] hs = new int[h];
-        for (int i = 0; i < h; i += 1) {
-            hs[i] = m(i);
+        for (int j = 0; j < h; j += 1) {
+            hs[j] = m(j);
         }
         return hs;
     }
