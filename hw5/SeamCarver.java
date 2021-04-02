@@ -8,12 +8,16 @@ public class SeamCarver {
     private int w;
     private int h;
     private double[][] m;
+    private int[][] path;
+    private int[] vs;
 
     public SeamCarver(Picture picture) {
         this.picture = picture;
         this.w = picture.width();
         this.h = picture.height();
         this.m = new double[w][h];
+        this.path = new int[w][h];
+        this.vs = new int[h];
     }
 
     // current picture
@@ -81,68 +85,100 @@ public class SeamCarver {
         }
     }
 
-    private double min(double a, double b) {
-        if (a < b) {
-            return a;
-        } else {
-            return b;
-        }
-    }
-
-    private int m(int j) {
+    private void m(int j) {
         if (j == 0) {
             for (int i = 0; i < w; i += 1) {
+                path[i][j] = 0;
                 m[i][0] = energy(i, 0);
             }
-            int min = 0;
-            for (int i = 0; i < w; i += 1) {
-                min = m[min][0] < m[i][0] ? min : i;
-            }
-            return min;
+            return;
         }
         for (int i = 0; i < w; i += 1) {
+            if (i < 0 || i > w - 1 || j < 0 || j > h - 1) {
+                throw new IndexOutOfBoundsException();
+            }
             if (i - 1 < 0 && i + 1 > w - 1) {
-                m[i][j] += energy(i, j) + m[i][j - 1];
+                path[i][j] = i;
+                m[i][j] = energy(i, j) + m[i][j - 1];
             } else if (i - 1 < 0 && i + 1 < w) {
-                m[i][j] += energy(i, j) + min(m[i][j - 1], m[i + 1][j - 1]);
+                if (m[i][j - 1] < m[i + 1][j - 1]) {
+                    path[i][j] = i;
+                    m[i][j] = energy(i, j) + m[i][j - 1];
+                } else {
+                    path[i][j] = i + 1;
+                    m[i][j] = energy(i, j) + m[i + 1][j - 1];
+                }
             } else if (i + 1 > w - 1 && i - 1 >= 0) {
-                m[i][j] += energy(i, j) + min(m[i - 1][j - 1], m[i][j - 1]);
+                if (m[i - 1][j - 1] < m[i][j - 1]) {
+                    path[i][j] = i - 1;
+                    m[i][j] = energy(i, j) + m[i - 1][j - 1];
+                } else {
+                    path[i][j] = i;
+                    m[i][j] = energy(i, j) + m[i][j - 1];
+                }
             } else {
-                m[i][j] += energy(i, j) + min(m[i - 1][j - 1], m[i][j - 1], m[i + 1][j - 1]);
+                double min = min(m[i - 1][j - 1], m[i][j - 1], m[i + 1][j - 1]);
+                if (min == m[i - 1][j - 1]) {
+                    path[i][j] = i - 1;
+                } else if (min == m[i][j - 1]) {
+                    path[i][j] = i;
+                } else {
+                    path[i][j] = i + 1;
+                }
+                m[i][j] = energy(i, j) + min;
             }
         }
-        int min = 0;
-        for (int i = 0; i < w; i += 1) {
-            min = m[min][j] < m[i][j] ? min : i;
-        }
-        return min;
+        return;
     }
 
     // sequence of indices for horizontal seam
     public int[] findHorizontalSeam() {
-        int[] hs = new int[h];
-        for (int j = 0; j < h; j += 1) {
-            hs[j] = m(j);
-        }
+        int[] hs = new int[w];
+        int tmp = w;
+        w = h;
+        h = tmp;
+        hs = findVerticalSeam();
         return hs;
     }
 
     // sequence of indices for vertical seam
     public int[] findVerticalSeam() {
-        int[] ws = new int[w];
-        for (int i = 0; i < w; i += 1) {
-            ws[i] = m(i);
+        for (int j = 0; j < h; j += 1) {
+            m(j);
         }
-        return ws;
+        vs[h - 1] = 0;
+        for (int i = 0; i < w; i += 1) {
+            vs[h - 1] = m[vs[h - 1]][h - 1] < m[i][h - 1] ? vs[h - 1] : i;
+        }
+        for (int j = h - 1; j > 0; j -= 1) {
+            vs[j - 1] = path[vs[j]][j];
+        }
+        return vs;
     }
 
     // remove horizontal seam from picture
     public void removeHorizontalSeam(int[] seam) {
+        if (seam.length != w) {
+            throw new IndexOutOfBoundsException();
+        }
+        for (int i = 0; i < w - 1; i += 1) {
+            if (seam[i] - seam[i + 1] < -1 || seam[i] - seam[i + 1] > 1) {
+                throw new IndexOutOfBoundsException();
+            }
+        }
         picture = SeamRemover.removeHorizontalSeam(picture, seam);
     }
 
     // remove vertical seam from picture
     public void removeVerticalSeam(int[] seam) {
+        if (seam.length != h) {
+            throw new IndexOutOfBoundsException();
+        }
+        for (int j = 0; j < h - 1; j += 1) {
+            if (seam[j] - seam[j + 1] < -1 || seam[j] - seam[j + 1] > 1) {
+                throw new IndexOutOfBoundsException();
+            }
+        }
         picture = SeamRemover.removeVerticalSeam(picture, seam);
     }
 }
