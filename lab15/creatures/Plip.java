@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.List;
 
 /** An implementation of a motile pacifist photosynthesizer.
- *  @author Josh Hug
+ *  @author Yicheng Xia
  */
 public class Plip extends Creature {
 
@@ -23,15 +23,15 @@ public class Plip extends Creature {
     /** creates plip with energy equal to E. */
     public Plip(double e) {
         super("plip");
-        r = 0;
-        g = 0;
-        b = 0;
+        r = 99;
+        g = 63 + 96 * (int) e;
+        b = 76;
         energy = e;
     }
 
     /** creates a plip with energy equal to 1. */
     public Plip() {
-        this(1);
+        this(1.0);
     }
 
     /** Should return a color with red = 99, blue = 76, and green that varies
@@ -42,7 +42,6 @@ public class Plip extends Creature {
      *  that you get this exactly correct.
      */
     public Color color() {
-        g = 63;
         return color(r, g, b);
     }
 
@@ -55,11 +54,17 @@ public class Plip extends Creature {
      *  private static final variable. This is not required for this lab.
      */
     public void move() {
+        energy -= 0.15;
     }
 
 
     /** Plips gain 0.2 energy when staying due to photosynthesis. */
     public void stay() {
+        if (energy + 0.2 > 2.0) {
+            energy = 2.0;
+        } else {
+            energy += 0.2;
+        }
     }
 
     /** Plips and their offspring each get 50% of the energy, with none
@@ -67,7 +72,8 @@ public class Plip extends Creature {
      *  Plip.
      */
     public Plip replicate() {
-        return this;
+        this.energy *= 0.5;
+        return new Plip(this.energy);
     }
 
     /** Plips take exactly the following actions based on NEIGHBORS:
@@ -81,7 +87,23 @@ public class Plip extends Creature {
      *  for an example to follow.
      */
     public Action chooseAction(Map<Direction, Occupant> neighbors) {
-        return new Action(Action.ActionType.STAY);
+        List<Direction> empties = getNeighborsOfType(neighbors, "empty");
+        List<Direction> cloruses = getNeighborsOfType(neighbors, "clorus");
+        if (empties.size() == 0) {
+            return new Action(Action.ActionType.STAY);
+        } else if (this.energy >= 1.0) {
+            Direction toReplicate = HugLifeUtils.randomEntry(empties);
+            return new Action(Action.ActionType.REPLICATE, toReplicate);
+        } else if (cloruses.size() > 0 && cloruses.size() < 4) {
+            if (HugLifeUtils.random() < 0.5) {
+                Direction toMove = HugLifeUtils.randomEntry(empties);
+                return new Action(Action.ActionType.MOVE, toMove);
+            } else {
+                return new Action(Action.ActionType.STAY);
+            }
+        } else {
+            return new Action(Action.ActionType.STAY);
+        }
     }
 
 }
