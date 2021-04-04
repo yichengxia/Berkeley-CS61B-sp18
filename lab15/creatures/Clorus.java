@@ -44,7 +44,7 @@ public class Clorus extends Creature {
     /** If a Clorus attacks another creature, it should gain that creature’s energy. */
     public void attack(Creature c) {
         this.energy += c.energy();
-        c = new Plip(0.0);
+        // c = new Plip(0.0);
     }
 
     /** Cloruses should lose 0.03 units of energy on a MOVE action. */
