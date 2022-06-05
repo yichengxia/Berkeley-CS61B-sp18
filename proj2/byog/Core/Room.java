@@ -88,7 +88,7 @@ public class Room {
         List<Position> positions = new ArrayList<>();
         for (int i = x; i < x + width; i += 1) {
             for (int j = y; j < y + height; j += 1) {
-                positions.add(new Position(x, y));
+                positions.add(new Position(i, j));
             }
         }
         return positions;

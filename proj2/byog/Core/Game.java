@@ -59,7 +59,208 @@ public class Game {
      * Method used for playing a fresh game. The game should start from the main menu.
      */
     public void playWithKeyboard() {
+        ter.initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        RandomWorldGenerator rwg = null;
+        String commands = "" + Command.NEW_GAME + Command.LOAD_GAME + Command.QUIT;
+        char key = 0;
+        while (commands.indexOf(key) == -1) {
+            displayMenu();
+            key = readCommand();
+        }
+        switch (key) {
+            case Command.NEW_GAME:
+                Long seed = readSeed();
+                Random random = new Random(seed);
+                rwg = new RandomWorldGenerator(world, Tileset.FLOOR, Tileset.WALL, random);
+                positions = rwg.getPositions(MIN_DIM, MAX_DIM, DIFF_WIDTH_HEIGHT, MAX_ROOMS,
+                    MAX_TRIES);
+                walls = rwg.getWalls(positions);
+                player = new Player(positions.get(RandomUtils.uniform(random, 0,
+                    positions.size())), positions, Tileset.PLAYER, world);
+                break;
+            case Command.LOAD_GAME:
+                if ((state = GameState.load(DIRECTORY)) == null) {
+                    quit("No saved game. Quitting...");
+                }
+                rwg = new RandomWorldGenerator(world, Tileset.FLOOR, Tileset.WALL, new Random(0));
+                state.setWorld(world);
+                state.setPlayerTile(Tileset.PLAYER);
+                positions = state.getAllowedPositions();
+                walls = rwg.getWalls(positions);
+                player = state.getPlayer();
+                break;
+            default:
+                quit("Quitting...");
+        }
+        play();
+        quit("Quitting...");
+    }
 
+    /**
+     * Display the initial game menu.
+     */
+    private void displayMenu() {
+        int seperation = 2;
+        Font font = StdDraw.getFont();
+        StdDraw.clear(StdDraw.BLACK);
+        StdDraw.setPenColor(Color.WHITE);
+        StdDraw.setFont(font.deriveFont(Font.BOLD, TITLE_FONT_SIZE));
+        StdDraw.text(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 9 / 10, TITLE);
+        StdDraw.setFont(font.deriveFont(Font.BOLD, COMMAND_FONT_SIZE));
+        StdDraw.text(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + seperation, TITLE_NEW_GAME);
+        StdDraw.text(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, TITLE_LOAD_GAME);
+        StdDraw.text(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - seperation, TITLE_QUIT);
+        StdDraw.setFont(font);
+        StdDraw.show();
+    }
+
+    /**
+     * Read the next command char.
+     * @return the char of that command, otherwise 0
+     */
+    private char readCommand() {
+        return StdDraw.hasNextKeyTyped() ? java.lang.Character.toUpperCase(StdDraw.nextKeyTyped())
+            : 0;
+    }
+
+    /**
+     * Read seed from user input.
+     * @return seed
+     */
+    private Long readSeed() {
+        Long seed = null;
+        while (true) {
+            displayMessage("Enter seed");
+            seed = readSeedFromKeyboard();
+            if (seed != null) {
+                break;
+            } else {
+                displayMessage("Invalid seed");
+                StdDraw.pause(1000);
+            }
+        }
+        return seed;
+    }
+
+    /**
+     * Read seed by concatenating from user keyboard.
+     * @return seed
+     */
+    private Long readSeedFromKeyboard() {
+        String seed = "";
+        while (true) {
+            char key = readCommand();
+            if (key == 0) {
+                continue;
+            } else if (key == '\n') {
+                break;
+            }
+            seed = seed + key;
+            displayMessage("Seed = " + seed);
+        }
+        try {
+            return Long.parseLong(seed);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Display the quitting message and the game.
+     * @param message
+     */
+    private void quit(String message) {
+        displayMessage(message);
+        StdDraw.pause(1000);
+        System.exit(0);
+    }
+
+    /**
+     * Display a message.
+     * @param message
+     */
+    private void displayMessage(String message) {
+        Font font = StdDraw.getFont();
+        StdDraw.clear(StdDraw.BLACK);
+        StdDraw.setPenColor(Color.WHITE);
+        StdDraw.setFont(font.deriveFont(Font.BOLD, TITLE_FONT_SIZE));
+        StdDraw.text(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, message);
+        StdDraw.setFont(font);
+        StdDraw.show();
+    }
+
+    /**
+     * Play the game with keyboard.
+     */
+    private void play() {
+        char c = 0;
+        while (c != Command.QUIT) {
+            renderGame();
+            renderMouseInfo();
+            c = readCommand();
+            switch (c) {
+                case Command.UP:
+                    player.moveUp();
+                    break;
+                case Command.DOWN:
+                    player.moveDown();
+                    break;
+                case Command.LEFT:
+                    player.moveLeft();
+                    break;
+                case Command.RIGHT:
+                    player.moveRight();
+                    break;
+                default:
+                    break;
+            }
+        }
+        displayMessage("Save game? (Y/N)");
+        while (true) {
+            c = readCommand();
+            if (c == Command.YES) {
+                state.setState(positions, walls.getPositions(), player.position());
+                GameState.save(state, DIRECTORY);
+                break;
+            } else if (c == Command.NO) {
+                break;
+            }
+        }
+    }
+
+    /**
+     * Render the game frame.
+     */
+    private void renderGame() {
+        drawAtPositions(Tileset.FLOOR);
+        walls.draw();
+        player.draw();
+        ter.renderFrame(world);
+    }
+
+    /**
+     * Renter the mouse position information.
+     */
+    private void renderMouseInfo() {
+        int x = (int) StdDraw.mouseX();
+        int y = (int) StdDraw.mouseY();
+        String message = "Nothing";
+        if (x < 0 || y < 0 || WIDTH <= x || HEIGHT <= y) {
+            message = "Nothing";
+        } else if (x == player.position().x() && y == player.position().y()) {
+            message = "Player";
+        } else if (world[x][y] == Tileset.FLOOR) {
+            message = "Floor";
+        } else if (world[x][y] == Tileset.WALL) {
+            message = "Wall";
+        }
+        Font font = StdDraw.getFont();
+        StdDraw.setPenColor(Color.WHITE);
+        StdDraw.setFont(font.deriveFont(Font.BOLD, HUD_FONT_SIZE));
+        StdDraw.textLeft(WINDOW_WIDTH / 60, HEIGHT + ((float) HUD_HEIGHT) / 2, message);
+        StdDraw.line(0, HEIGHT, WIDTH, HEIGHT);
+        StdDraw.setFont(font);
+        StdDraw.show();
     }
 
     /**
@@ -176,29 +377,5 @@ public class Game {
         for (Position p : positions) {
             world[p.x()][p.y()] = tile;
         }
-    }
-
-    /**
-     * Display the quitting message and the game.
-     * @param message
-     */
-    private void quit(String message) {
-        diaplay(message);
-        StdDraw.pause(1000);
-        System.exit(0);
-    }
-
-    /**
-     * Display a message.
-     * @param message
-     */
-    private void diaplay(String message) {
-        Font font = StdDraw.getFont();
-        StdDraw.clear(StdDraw.BLACK);
-        StdDraw.setPenColor(Color.WHITE);
-        StdDraw.setFont(font.deriveFont(Font.BOLD, TITLE_FONT_SIZE));
-        StdDraw.text(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, message);
-        StdDraw.setFont(font);
-        StdDraw.show();
     }
 }
