@@ -1,6 +1,5 @@
 {
     "java.project.referencedLibraries": [
-        "lib/**/*.jar",
         "/Users/yicheng/Downloads/Penn/Berkeley-CS61B-sp18/library-sp18/**/*.jar"
     ]
 }
