@@ -111,17 +111,16 @@ public class GameState implements Serializable {
     /**
      * Set position state in the world, inclusing allowed positions, walls positions,
      * and player position.
-     * @param allowedPositions
-     * @param wallsPositions
-     * @param playerPosition
+     * @param aps allowed positions
+     * @param wps walls positions
+     * @param pp player position
      */
-    public void setState(List<Position> allowedPositions, List<Position> wallsPositions,
-        Position playerPosition) {
-        if (allowedPositions == null || wallsPositions == null || playerPosition == null) {
+    public void setState(List<Position> aps, List<Position> wps, Position pp) {
+        if (aps == null || wps == null || wps == null) {
             throw new IllegalArgumentException("Positions to set for game state can not be null.");
         }
-        setAllowedPositions(allowedPositions);
-        setWallsPositions(wallsPositions);
-        setPlayerPosition(playerPosition);
+        setAllowedPositions(aps);
+        setWallsPositions(wps);
+        setPlayerPosition(pp);
     }
 }
