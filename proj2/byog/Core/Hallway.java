@@ -61,10 +61,10 @@ public abstract class Hallway {
      * @param floor
      * @param wall
      */
-    protected void initialize(TETile[][] world, TETile floor, TETile wall) {
-        this.world = world;
-        this.floor = floor;
-        this.wall = wall;
+    protected void initialize(TETile[][] worldTile, TETile floorTile, TETile wallTile) {
+        world = worldTile;
+        floor = floorTile;
+        wall = wallTile;
     }
 
     /**
