@@ -59,6 +59,7 @@ public class Game {
      * Method used for playing a fresh game. The game should start from the main menu.
      */
     public void playWithKeyboard() {
+
     }
 
     /**
@@ -74,7 +75,7 @@ public class Game {
      * @return the 2D TETile[][] representing the state of the world
      */
     public TETile[][] playWithInputString(String input) {
-        // TODO: Fill out this method to run the game using the input passed in,
+        // Fill out this method to run the game using the input passed in,
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
         input = input.toUpperCase();
@@ -83,12 +84,15 @@ public class Game {
         long seed = getSeed(input);
         String commands = getCommands(input);
         Random random = new Random(seed);
-        RandomWorldGenerator rwg = new RandomWorldGenerator(world, Tileset.FLOOR, Tileset.WALL, random);
-        switch(key) {
+        RandomWorldGenerator rwg = new RandomWorldGenerator(world, Tileset.FLOOR, Tileset.WALL,
+            random);
+        switch (key) {
             case Command.NEW_GAME:
-                positions = rwg.getPositions(MIN_DIM, MAX_DIM, DIFF_WIDTH_HEIGHT, MAX_ROOMS, MAX_TRIES);
+                positions = rwg.getPositions(MIN_DIM, MAX_DIM, DIFF_WIDTH_HEIGHT, MAX_ROOMS,
+                    MAX_TRIES);
                 walls = rwg.getWalls(positions);
-                player = new Player(positions.get(RandomUtils.uniform(random, 0, positions.size())), positions, Tileset.PLAYER, world);
+                player = new Player(positions.get(RandomUtils.uniform(random, 0,
+                    positions.size())), positions, Tileset.PLAYER, world);
                 break;
             case Command.LOAD_GAME:
                 state = GameState.load(DIRECTORY);
@@ -116,7 +120,8 @@ public class Game {
     private long getSeed(String input) {
         Pattern pattern = Pattern.compile("[0-9]+");
         Matcher matcher = pattern.matcher(input);
-        return matcher.find() ? Long.parseLong(input.substring(matcher.start(), matcher.end())) : 0;
+        return matcher.find() ? Long.parseLong(input.substring(matcher.start(), matcher.end()))
+            : 0;
     }
 
     /**

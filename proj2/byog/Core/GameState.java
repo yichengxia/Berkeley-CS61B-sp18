@@ -2,7 +2,9 @@ package byog.Core;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -69,8 +71,14 @@ public class GameState implements Serializable {
                 GameState state = (GameState) os.readObject();
                 os.close();
                 return state;
-            } catch (Exception e) {
-                System.err.println(e.toString());
+            } catch (FileNotFoundException e) {
+                System.out.println("File " + directory + "is not found.");
+                System.exit(0);
+            } catch (IOException e) {
+                System.out.println(e.toString());
+                System.exit(0);
+            } catch (ClassNotFoundException e) {
+                System.out.println(e.toString());
                 System.exit(0);
             }
         }
@@ -91,19 +99,24 @@ public class GameState implements Serializable {
             ObjectOutputStream os = new ObjectOutputStream(fs);
             os.writeObject(state);
             os.close();
-        } catch (Exception e) {
-            System.err.println(e.toString());
+        } catch (FileNotFoundException e) {
+            System.out.println("File " + directory + "is not found.");
+            System.exit(0);
+        } catch (IOException e) {
+            System.out.println(e.toString());
             System.exit(0);
         }
     }
 
     /**
-     * Set position state in the world, inclusing allowed positions, walls positions, and player position.
+     * Set position state in the world, inclusing allowed positions, walls positions,
+     * and player position.
      * @param allowedPositions
      * @param wallsPositions
      * @param playerPosition
      */
-    public void setState(List<Position> allowedPositions, List<Position> wallsPositions, Position playerPosition) {
+    public void setState(List<Position> allowedPositions, List<Position> wallsPositions,
+        Position playerPosition) {
         if (allowedPositions == null || wallsPositions == null || playerPosition == null) {
             throw new IllegalArgumentException("Positions to set for game state can not be null.");
         }

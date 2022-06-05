@@ -51,13 +51,14 @@ public class Walls {
                 if (allPositions.contains(below)) {
                     addWall(x, y);
                 }
-                if (wallPositions.contains(left) && wallPositions.contains(below) && allPositions.contains(belowLeft)) {
+                if (wallPositions.contains(left) && wallPositions.contains(below)
+                    && allPositions.contains(belowLeft)) {
                     addWall(x, y);
                 }
             }
         }
         /* 2. Loop right-left and top-down to add left and lower walls and bottom-left corners. */
-        for (int x = world.length - 2 ; x >= 0; x -= 1) {
+        for (int x = world.length - 2; x >= 0; x -= 1) {
             for (int y = world[0].length - 2; y >= 0; y -= 1) {
                 Position current = new Position(x, y);
                 Position above = new Position(x, y + 1);
@@ -72,7 +73,8 @@ public class Walls {
                 if (allPositions.contains(above)) {
                     addWall(x, y);
                 }
-                if (wallPositions.contains(right) && wallPositions.contains(above) && allPositions.contains(aboveRight)) {
+                if (wallPositions.contains(right) && wallPositions.contains(above)
+                    && allPositions.contains(aboveRight)) {
                     addWall(x, y);
                 }
             }
@@ -87,10 +89,12 @@ public class Walls {
                 if (!wallPositions.contains(current)) {
                     continue;
                 }
-                if (allPositions.contains(below) && !allPositions.contains(left) && wallPositions.contains(belowLeft)) {
+                if (allPositions.contains(below) && !allPositions.contains(left)
+                    && wallPositions.contains(belowLeft)) {
                     addWall(x - 1, y);
                 }
-                if (!allPositions.contains(below) && allPositions.contains(left) && wallPositions.contains(belowLeft)) {
+                if (!allPositions.contains(below) && allPositions.contains(left)
+                    && wallPositions.contains(belowLeft)) {
                     addWall(x, y - 1);
                 }
             }

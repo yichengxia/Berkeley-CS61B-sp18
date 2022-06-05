@@ -43,7 +43,8 @@ public abstract class Hallway {
                     positions[i] = new Position(this.p1.x() + i, this.p1.y());
                 }
             } else {
-                throw new IllegalArgumentException("Tried to initialize " + getClass() + " with non-orthogonal positions.");
+                throw new IllegalArgumentException("Tried to initialize " + getClass()
+                    + " with non-orthogonal positions.");
             }
         }
     }
@@ -60,7 +61,11 @@ public abstract class Hallway {
      * @param floor
      * @param wall
      */
-    abstract void initialize(TETile[][] world, TETile floor, TETile wall);
+    protected void initialize(TETile[][] world, TETile floor, TETile wall) {
+        this.world = world;
+        this.floor = floor;
+        this.wall = wall;
+    }
 
     /**
      * Get hallway list represented by their segment positions.

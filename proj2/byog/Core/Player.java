@@ -14,7 +14,8 @@ public class Player {
     private TETile playerTile;
     private TETile[][] world;
 
-    public Player(Position position, List<Position> allowePositions, TETile playerTile, TETile[][] world) {
+    public Player(Position position, List<Position> allowePositions, TETile playerTile,
+        TETile[][] world) {
         this.position = position;
         this.allowedPositions = allowePositions;
         this.playerTile = playerTile;
@@ -68,8 +69,8 @@ public class Player {
      * @return true if the player can move, otherwise false
      */
     private boolean canMove(int dx, int dy) {
-        if (position.x() + dx <= 0 || position.x() + dx >= world.length - 1 || position.y() + dy <= 0 ||
-            position.y() + dy >= world[0].length - 1) {
+        if (position.x() + dx <= 0 || position.x() + dx >= world.length - 1
+            || position.y() + dy <= 0 || position.y() + dy >= world[0].length - 1) {
             return false;
         }
         Position destination = new Position(position.x() + dx, position.y() + dy);

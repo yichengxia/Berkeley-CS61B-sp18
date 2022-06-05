@@ -36,20 +36,25 @@ public class RandomWorldGenerator {
      * @param maxTries
      * @return list of positions
      */
-    public List<Position> getPositions(int minDim, int maxDim, int diffWH, int maxRooms, int maxTries) {
+    public List<Position> getPositions(int minDim, int maxDim, int diffWH, int maxRooms,
+        int maxTries) {
         // Get rooms
         List<Room> rooms = new ArrayList<>();
-        if (maxDim + diffWH + 2 * WALL_SIZE >= world.length || maxDim + diffWH + 2 * WALL_SIZE >= world[0].length) {
+        if (maxDim + diffWH + 2 * WALL_SIZE >= world.length
+            || maxDim + diffWH + 2 * WALL_SIZE >= world[0].length) {
             throw new RuntimeException("Room size is too big to fit world frame.");
         }
         int[] widths = getRandomUniformArray(minDim, maxDim + 1, maxTries);
         int[] heights = getRandomUniformArray(minDim - diffWH, maxDim + diffWH + 1, maxTries);
         for (int i = 0; i < maxRooms; i += 1) {
-            int x = RandomUtils.uniform(random, WALL_SIZE, world.length - (maxDim + diffWH + WALL_SIZE));
-            int y = RandomUtils.uniform(random, WALL_SIZE, world[0].length - (maxDim + diffWH + WALL_SIZE));
+            int x = RandomUtils.uniform(random, WALL_SIZE, world.length - (maxDim + diffWH
+                + WALL_SIZE));
+            int y = RandomUtils.uniform(random, WALL_SIZE, world[0].length - (maxDim + diffWH
+                + WALL_SIZE));
             for (int j = 0; j < maxTries; j += 1) {
                 Room room = new Room(new Position(x, y), widths[i], heights[i], world, floor, wall);
-                List<Room> overlapping = rooms.stream().filter(r -> r.overlapOnX(room) && r.overlapOnY(room)).collect(Collectors.toList());
+                List<Room> overlapping = rooms.stream().filter(r -> r.overlapOnX(room)
+                    && r.overlapOnY(room)).collect(Collectors.toList());
                 if (overlapping.isEmpty()) {
                     rooms.add(room);
                     break;
@@ -134,7 +139,8 @@ public class RandomWorldGenerator {
             right = room1;
         }
         int y = RandomUtils.uniform(random, high.y(), low.y() + low.height());
-        return new StraightHallway(new Position(left.x() + left.width(), y), new Position(right.x() - 1, y), world, floor, wall);
+        return new StraightHallway(new Position(left.x() + left.width(), y),
+            new Position(right.x() - 1, y), world, floor, wall);
     }
 
     /**
@@ -160,7 +166,8 @@ public class RandomWorldGenerator {
             right = room1;
         }
         int x = RandomUtils.uniform(random, right.x(), left.x() + left.width());
-        return new StraightHallway(new Position(x, low.y() + low.height()), new Position(x, high.y() - 1), world, floor, wall);
+        return new StraightHallway(new Position(x, low.y() + low.height()),
+            new Position(x, high.y() - 1), world, floor, wall);
     }
 
     /**
@@ -182,7 +189,8 @@ public class RandomWorldGenerator {
         int x2 = RandomUtils.uniform(random, left.x(), left.x() + left.width());
         int y2 = RandomUtils.uniform(random, right.y(), right.y() + right.height());
         int y3 = right.y() < left.y() ? (left.y() - 1) : (left.y() + left.height());
-        return new BentHallway(new Position(x1, y2), new Position(x2, y2), new Position(x2, y3), world, floor, wall);
+        return new BentHallway(new Position(x1, y2), new Position(x2, y2), new Position(x2, y3),
+            world, floor, wall);
     }
 
     /**
@@ -204,7 +212,8 @@ public class RandomWorldGenerator {
         int x2 = RandomUtils.uniform(random, right.x(), right.x() + right.width());
         int y2 = RandomUtils.uniform(random, left.y(), left.y() + left.height());
         int y3 = left.y() < right.y() ? (right.y() - 1) : (right.y() + right.height());
-        return new BentHallway(new Position(x1, y2), new Position(x2, y2), new Position(x2, y3), world, floor, wall);
+        return new BentHallway(new Position(x1, y2), new Position(x2, y2), new Position(x2, y3),
+            world, floor, wall);
     }
 
     /**
