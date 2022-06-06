@@ -19,7 +19,7 @@ public class Game {
     public static final int HEIGHT = 30;
 
     /* Game configurations. */
-    private static final String DIRECTORY = "./world.ser";
+    private static final String DIRECTORY = "./game.txt";
     private static final int MIN_DIM = 4;
     private static final int MAX_DIM = 4;
     private static final int DIFF_WIDTH_HEIGHT = 1;
