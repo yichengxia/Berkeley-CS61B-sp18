@@ -61,4 +61,13 @@ public class Position implements Serializable {
         Position p = (Position) o;
         return x == p.x && y == p.y;
     }
+
+    /**
+     * Override the hashCode method.
+     * @return their sum
+     */
+    @Override
+    public int hashCode() {
+        return x + y;
+    }
 }
