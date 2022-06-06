@@ -36,7 +36,7 @@ public class Position implements Serializable {
      * @return true if the x value of two positions are equal, otherwise false
      */
     public boolean alignedOnX(Position p) {
-        return x == p.x;
+        return y == p.y;
     }
 
     /**
@@ -45,6 +45,20 @@ public class Position implements Serializable {
      * @return true if the y value of two positions are equal, otherwise false
      */
     public boolean alignedOnY(Position p) {
-        return y == p.y;
+        return x == p.x;
+    }
+
+    /**
+     * Equality operator. Override to compare position instances.
+     * @param o object to compare
+     * @return true if objects are equal in both x and y
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Position)) {
+            return false;
+        }
+        Position p = (Position) o;
+        return x == p.x && y == p.y;
     }
 }

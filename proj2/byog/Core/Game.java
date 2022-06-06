@@ -355,7 +355,7 @@ public class Game {
                 case Command.RIGHT:
                     player.moveRight();
                     break;
-                case Command.QUIT:
+                case ':':
                     int i = commands.indexOf(c);
                     if (commands.charAt(i + 1) == Command.QUIT) {
                         state.setState(positions, walls.getPositions(), player.position());

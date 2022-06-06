@@ -16,7 +16,7 @@ public abstract class Hallway {
         private Position[] positions;
 
         Segment(Position p1, Position p2) {
-            if (p1.alignedOnX(p2)) {
+            if (p1.alignedOnY(p2)) {
                 if (p1.y() < p2.y()) {
                     this.p1 = p1;
                     this.p2 = p2;
@@ -29,7 +29,7 @@ public abstract class Hallway {
                 for (int i = 0; i < n; i += 1) {
                     positions[i] = new Position(this.p1.x(), this.p1.y() + i);
                 }
-            } else if (p1.alignedOnY(p2)) {
+            } else if (p1.alignedOnX(p2)) {
                 if (p1.x() < p2.x()) {
                     this.p1 = p1;
                     this.p2 = p2;

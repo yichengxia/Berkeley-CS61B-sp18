@@ -44,8 +44,8 @@ public class RandomWorldGenerator {
             || maxDim + diffWH + 2 * WALL_SIZE >= world[0].length) {
             throw new RuntimeException("Room size is too big to fit world frame.");
         }
-        int[] widths = getRandomUniformArray(minDim, maxDim + 1, maxTries);
-        int[] heights = getRandomUniformArray(minDim - diffWH, maxDim + diffWH + 1, maxTries);
+        int[] widths = getRandomUniformArray(minDim, maxDim + 1, maxRooms);
+        int[] heights = getRandomUniformArray(minDim - diffWH, maxDim + diffWH + 1, maxRooms);
         for (int i = 0; i < maxRooms; i += 1) {
             int x = RandomUtils.uniform(random, WALL_SIZE, world.length - (maxDim + diffWH
                 + WALL_SIZE));
